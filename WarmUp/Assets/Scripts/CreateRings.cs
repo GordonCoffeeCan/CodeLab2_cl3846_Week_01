@@ -14,6 +14,8 @@ public class CreateRings : MonoBehaviour {
     private int colorBallIndex = 0;
     private int colorBallIndexInRings = 0;
 
+    private string[] ballNames = new string[4] { "Blue", "Green", "Red", "Yellow" };
+
     private void Awake() {
         if (ring == null) {
             Debug.LogError("No ring prefab assigned!");
@@ -33,7 +35,8 @@ public class CreateRings : MonoBehaviour {
 
         for (int i = 0; i < ringWallLength; i++) {
             if(i == colorBallIndexInRings || i == colorBallIndexInRings + 1) {
-                Instantiate(balls[colorBallIndex], new Vector3(stepDistance * i, this.transform.localPosition.y, 0), Quaternion.identity, this.transform);
+                Ball _ballClone = (Ball)Instantiate(balls[colorBallIndex], new Vector3(stepDistance * i, this.transform.localPosition.y, 0), Quaternion.identity, this.transform);
+                _ballClone.gameObject.name = ballNames[colorBallIndex];
             } else {
                 Instantiate(ring, new Vector3(stepDistance * i, this.transform.localPosition.y, 0), Quaternion.identity, this.transform);
             }
