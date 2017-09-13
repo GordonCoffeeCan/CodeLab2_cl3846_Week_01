@@ -66,8 +66,6 @@ public class PlayerContoller : MonoBehaviour {
 
         targetPosition.y = this.transform.position.y;
 
-        Debug.Log(targetPosition.x);
-
         this.transform.position = Vector3.Lerp(this.transform.position, targetPosition, 0.35f);
     }
 
