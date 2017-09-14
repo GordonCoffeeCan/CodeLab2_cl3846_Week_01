@@ -54,6 +54,9 @@ public class GameManager : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
+
+        gameSettings.gameSpeed += Time.deltaTime / 30;
+
         createRingsIntervalTimer -= gameSettings.gameSpeed * Time.deltaTime;
         if (createRingsIntervalTimer <= 0) {
             Instantiate(rings, new Vector3(0, screenPosition.y + 0.32f, 0), Quaternion.identity);

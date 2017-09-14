@@ -36,17 +36,17 @@ public class PlayerContoller : MonoBehaviour {
     }
 
     private void ChangeAndRotate() {
-        if (Input.GetKeyDown(KeyCode.Space) && readyToRotate) {
-            targetRotation = Quaternion.Euler(new Vector3(0, 0, Mathf.RoundToInt(this.transform.rotation.eulerAngles.z) - 90));
+        if (Input.GetKeyDown(KeyCode.Space)) {
+            targetRotation = Quaternion.Euler(new Vector3(0, 0, Mathf.RoundToInt(targetRotation.eulerAngles.z) - 90));
             CreateGraphic();
             readyToRotate = false;
         }
 
         this.transform.rotation = Quaternion.Slerp(this.transform.rotation, targetRotation, 0.4f);
 
-        if (Mathf.RoundToInt(this.transform.rotation.eulerAngles.z) % 90 == 0) {
+        /*if (Mathf.RoundToInt(this.transform.rotation.eulerAngles.z) % 90 == 0) {
             readyToRotate = true;
-        }
+        }*/
     }
 
     private void Controller() {
