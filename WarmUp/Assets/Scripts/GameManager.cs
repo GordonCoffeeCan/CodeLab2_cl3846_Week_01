@@ -104,8 +104,6 @@ public class GameManager : MonoBehaviour {
             gameAudio.Play();
             createRingsIntervalTimer = currentCreateRingsIntervalTimer;
         }
-
-        Debug.Log(gameSettings.gameSpeed);
     }
 
     IEnumerator RestartGame(float _second) {
