@@ -1,10 +1,26 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour {
     public static GameManager instance;
     public GameSettings gameSettings;
+
+    public enum GameState {
+        Start,
+        InProgress,
+        Dead,
+        Restarting
+    }
+
+    public GameState gameState;
+
+    [HideInInspector]
+    public bool isScored = false;
+
+    [HideInInspector]
+    public bool isDead = false;
 
     [HideInInspector]
     public Vector3 screenPosition;
@@ -12,6 +28,8 @@ public class GameManager : MonoBehaviour {
     [SerializeField]
     private Transform rings;
     private Transform player;
+
+    private float currentGameSpeed;
 
     private AudioSource gameAudio;
 
@@ -43,6 +61,8 @@ public class GameManager : MonoBehaviour {
 
     // Use this for initialization
     void Start () {
+        currentGameSpeed = gameSettings.gameSpeed;
+        gameState = GameState.Start;
         player = GameObject.FindGameObjectWithTag("Player").transform;
         gameAudio = this.GetComponent<AudioSource>();
         player.position = new Vector3(0, -screenPosition.y + 0.64f, 0);
@@ -54,8 +74,28 @@ public class GameManager : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-
-        gameSettings.gameSpeed += Time.deltaTime / 30;
+        switch (gameState) {
+            case GameState.Start:
+                gameSettings.gameSpeed = currentGameSpeed;
+                gameState = GameState.InProgress;
+                break;
+            case GameState.InProgress:
+                if(isScored == true) {
+                    gameAudio.clip = scoreAudio;
+                    gameAudio.Play();
+                    gameSettings.gameSpeed += 0.2f;
+                    isScored = false;
+                }
+                break;
+            case GameState.Dead:
+                gameAudio.clip = deathAudio;
+                gameAudio.Play();
+                gameState = GameState.Restarting;
+                StartCoroutine(RestartGame(2));
+                break;
+            case GameState.Restarting:
+                return;
+        } 
 
         createRingsIntervalTimer -= gameSettings.gameSpeed * Time.deltaTime;
         if (createRingsIntervalTimer <= 0) {
@@ -64,5 +104,12 @@ public class GameManager : MonoBehaviour {
             gameAudio.Play();
             createRingsIntervalTimer = currentCreateRingsIntervalTimer;
         }
+
+        Debug.Log(gameSettings.gameSpeed);
+    }
+
+    IEnumerator RestartGame(float _second) {
+        yield return new WaitForSeconds(_second);
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
 }
