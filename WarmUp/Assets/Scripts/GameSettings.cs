@@ -7,4 +7,5 @@ using System;
 public class GameSettings {
     public float gameSpeed = 1;
     public float createTimer = 10;
+    public float restartTimer = 3;
 }

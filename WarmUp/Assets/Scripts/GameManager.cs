@@ -2,10 +2,20 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour {
     public static GameManager instance;
     public GameSettings gameSettings;
+
+    [SerializeField]
+    private Text scoreText;
+
+    [SerializeField]
+    private Text levelText;
+
+    //[SerializeField]
+    //private Text highScoreText;
 
     public enum GameState {
         Start,
@@ -42,6 +52,8 @@ public class GameManager : MonoBehaviour {
 
     [HideInInspector]
     public int ringsCount = 0;
+
+    private float score = 0;
 
     private float createRingsIntervalTimer = 0;
     private float currentCreateRingsIntervalTimer = 0;
@@ -84,14 +96,22 @@ public class GameManager : MonoBehaviour {
                     gameAudio.clip = scoreAudio;
                     gameAudio.Play();
                     gameSettings.gameSpeed += 0.2f;
+                    score++;
                     isScored = false;
                 }
+                scoreText.text = (score * Mathf.RoundToInt(gameSettings.gameSpeed)).ToString();
+                levelText.text = Mathf.RoundToInt(gameSettings.gameSpeed).ToString();
+                /*if (score >= GameData.highScore) {
+                    GameData.highScore = Mathf.RoundToInt(score);
+                    highScoreText.text = GameData.highScore.ToString();
+                }*/
                 break;
             case GameState.Dead:
                 gameAudio.clip = deathAudio;
                 gameAudio.Play();
                 gameState = GameState.Restarting;
-                StartCoroutine(RestartGame(2));
+                
+                StartCoroutine(RestartGame(gameSettings.restartTimer));
                 break;
             case GameState.Restarting:
                 return;
